@@ -238,7 +238,7 @@ if (lineages=="Tom") {system.time(GISAID$variant <- case_when(
   (linplus("BA.2.75.2")|
      mut_allof(c("NSP3_S403L","NSP8_N118S","Spike_R346T","Spike_F486S"))|
      mut_allof(c("NSP3_S403L","E_T11A","Spike_R346T","Spike_F486S")))&
-     datefrom("2022-04-01") ~ "Omicron (BA.2.75.2)",
+    datefrom("2022-04-01") ~ "Omicron (BA.2.75.2)",
   (linplus("BA.2.75")|
      mut_allof(c("NSP3_S403L","NSP8_N118S"))|
      mut_allof(c("NSP3_S403L","E_T11A")))&
@@ -346,13 +346,13 @@ if (lineages=="Rodrigo") {system.time(GISAID$variant <- case_when(
 # sum(GISAID$variant=="Omicron (BA.5)", na.rm=T) # 474004
 # sum(GISAID$variant=="Omicron (BA.5.2)", na.rm=T) # 188559
 # sum(GISAID$variant=="Omicron (BA.5.2.1)", na.rm=T) # 281604
- sum(GISAID$variant=="Omicron (BQ.1)", na.rm=T)
- sum(GISAID$variant=="test", na.rm=T) 
- sum(GISAID$variant=="BA.4", na.rm=T) # 381 261 in COGUK
- sum(GISAID$variant=="level5+ (BQ.1.1, XBB, etc.)", na.rm=T) 
- sum(GISAID$variant=="level4 (BA.2.75.2, BQ.1, etc.)", na.rm=T) 
- sum(GISAID$variant=="level3 (BA.4.6, BF.7, etc.)", na.rm=T) 
- 
+sum(GISAID$variant=="Omicron (BQ.1)", na.rm=T)
+sum(GISAID$variant=="test", na.rm=T) 
+sum(GISAID$variant=="BA.4", na.rm=T) # 381 261 in COGUK
+sum(GISAID$variant=="level5+ (BQ.1.1, XBB, etc.)", na.rm=T) 
+sum(GISAID$variant=="level4 (BA.2.75.2, BQ.1, etc.)", na.rm=T) 
+sum(GISAID$variant=="level3 (BA.4.6, BF.7, etc.)", na.rm=T) 
+
 table(GISAID$variant)
 table(GISAID_sel$variant)
 
@@ -871,9 +871,9 @@ ggsave(file=file.path("plots", plotdir, paste0("global_multinom_fit_UK_logit_sca
 
 # plot just for UK Last 6 months
 sel_variants = tail(levels_VARIANTS_plot,-11)
-plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant %in% sel_variants,&fit_preds$country=="United Kingdom",], 
-                         x=date, y=predicted, geom="blank") +
-
+plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$country=="United Kingdom",], 
+                              x=date, y=predicted, geom="blank") +
+  
   # facet_wrap(~ country) +
   geom_ribbon(aes(y=predicted, ymin=conf.low, ymax=conf.high, colour=NULL,
                   fill=variant), alpha=I(0.3)) +
