@@ -375,12 +375,12 @@ lineage_cols_plot = case_when(
   levels_VARIANTS_plot=="Delta" ~ "mediumorchid",
   levels_VARIANTS_plot=="Omicron (BA.1)" ~ "red",
   levels_VARIANTS_plot=="Omicron (BA.2)" ~ "darkred",
-  levels_VARIANTS_plot=="Omicron (BA.4)" ~ "gold",
+  levels_VARIANTS_plot=="Omicron (BA.4)" ~ "orange",
   levels_VARIANTS_plot=="Omicron (BA.5)" ~ "blue2",
   levels_VARIANTS_plot=="Omicron (BA.5.2*)" ~ "blue4",
-  levels_VARIANTS_plot=="level3 (BA.4.6, BF.7, etc.)" ~ "darkmagenta",
-  levels_VARIANTS_plot=="level4 (BA.2.75.2, BQ.1, etc.)" ~ "magenta1",
-  levels_VARIANTS_plot=="level5+ (BQ.1.1, XBB, etc.)" ~ "magenta3"
+  levels_VARIANTS_plot=="level3 (BA.4.6, BF.7, etc.)" ~ "gold",
+  levels_VARIANTS_plot=="level4 (BA.2.75.2, BQ.1, etc.)" ~ "darkmagenta",
+  levels_VARIANTS_plot=="level5+ (BQ.1.1, XBB, etc.)" ~ "magenta1"
 )
 pal.bands(lineage_cols_plot)
 # pal.volcano(lineage_cols_plot)
