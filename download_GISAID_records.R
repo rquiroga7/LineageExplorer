@@ -114,7 +114,7 @@ downl_records = function (accession_ids,
   checkbox_metadata$clickElement() 
   
   # click Download
-  mostrecenttsv = suppressWarnings(max(file.info(list.files(target_dir, pattern=".tsv", full.names=T))$mtime))
+  mostrecenttsv = suppressWarnings(max(file.info(list.files(target_dir, pattern=".tsv$", full.names=T))$mtime))
   Sys.sleep(1) # TO DO change to while loop
   mostrecenttsv_new = mostrecenttsv
   download_button = NULL
@@ -150,10 +150,11 @@ downl_records = function (accession_ids,
   
   # wait until download finishes
   while (mostrecenttsv_new==mostrecenttsv) {
-    mostrecenttsv_new = suppressWarnings(max(file.info(list.files(target_dir, pattern=".tsv", full.names=T))$mtime))
+    mostrecenttsv_new = suppressWarnings(max(file.info(list.files(target_dir, pattern=".tsv$", full.names=T))$mtime))
     Sys.sleep(1)
   }
-  df = file.info(list.files(target_dir, pattern=".tsv", full.names = T))
+  Sys.sleep(2)
+  df = file.info(list.files(target_dir, pattern=".tsv$", full.names = T))
   download = rownames(df)[which.max(df$mtime)]
   
   message(paste0("Downloaded GISAID metadata file ", download))
@@ -329,6 +330,18 @@ browser$stop()
 remDr$quit()
 
 return(downloads)
+
+# using my access credentials I am getting back the following fields:
+# [1] "virus_name"                      "accession_id"                   
+# [3] "collection_date"                 "location"                       
+# [5] "host"                            "additional_location_information"
+# [7] "sampling_strategy"               "gender"                         
+# [9] "patient_age"                     "patient_status"                 
+# [11] "last_vaccinated"                 "passage"                        
+# [13] "specimen"                        "additional_host_information"    
+# [15] "pango_lineage"                   "clade"                          
+# [17] "aa_substitutions"                "continent"                      
+# [19] "country"   
 
 }
 
