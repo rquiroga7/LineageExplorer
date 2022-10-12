@@ -290,13 +290,13 @@ if (lineages=="Tom") {system.time(GISAID$variant <- case_when(
 if (lineages=="Rodrigo") {system.time(GISAID$variant <- case_when(
   mut_z_at_least(c("Spike_R346","Spike_K356","Spike_K444", "Spike_V445","Spike_G446","Spike_N450","Spike_L452","Spike_N460","Spike_F486","Spike_F490","Spike_S494"),z=5)
   & !linplus("BA.1")
-  & datefrom("2022-07-01") ~ 'level5+ (BQ.1.1, XBB, etc.)',
+  & datefrom("2022-07-01") ~ 'level6+ (BQ.1.1, XBB, etc.)',
   mut_z_exactly(c("Spike_R346","Spike_K356","Spike_K444", "Spike_V445","Spike_G446","Spike_N450","Spike_L452","Spike_N460","Spike_F486","Spike_F490","Spike_S494"),z=4)
   & !linplus("BA.1")
-  & datefrom("2022-07-01") ~ 'level4 (BA.2.75.2, BQ.1, etc.)',
+  & datefrom("2022-07-01") ~ 'level5 (BA.2.75.2, BQ.1, etc.)',
   mut_z_exactly(c("Spike_R346","Spike_K356","Spike_K444", "Spike_V445","Spike_G446","Spike_N450","Spike_L452","Spike_N460","Spike_F486","Spike_F490","Spike_S494"),z=3)
   & !linplus("BA.1")
-  & datefrom("2022-03-01") ~ 'level3 (BA.4.6, BF.7, etc.)',
+  & datefrom("2022-03-01") ~ 'level4 (BA.4.6, BF.7, etc.)',
   linplus_oneof(c("BA.5.2","BA.5.2.1","BF"))&
     datefrom("2022-02-01") ~ "Omicron (BA.5.2*)",
   linplus_oneof(c("B.1.617.2","AY"))&
@@ -349,9 +349,9 @@ if (lineages=="Rodrigo") {system.time(GISAID$variant <- case_when(
 sum(GISAID$variant=="Omicron (BQ.1)", na.rm=T)
 sum(GISAID$variant=="test", na.rm=T) 
 sum(GISAID$variant=="BA.4", na.rm=T) # 381 261 in COGUK
-sum(GISAID$variant=="level5+ (BQ.1.1, XBB, etc.)", na.rm=T) 
-sum(GISAID$variant=="level4 (BA.2.75.2, BQ.1, etc.)", na.rm=T) 
-sum(GISAID$variant=="level3 (BA.4.6, BF.7, etc.)", na.rm=T) 
+sum(GISAID$variant=="level6+ (BQ.1.1, XBB, etc.)", na.rm=T) 
+sum(GISAID$variant=="level5 (BA.2.75.2, BQ.1, etc.)", na.rm=T) 
+sum(GISAID$variant=="level4 (BA.4.6, BF.7, etc.)", na.rm=T) 
 
 table(GISAID$variant)
 table(GISAID_sel$variant)
@@ -363,9 +363,9 @@ nrow(GISAID) # 13164288
 #sel_reference_VOC = "Omicron (BA.5.2)"
 sel_reference_VOC = "Omicron (BA.5.2*)"
 #levels_VARIANTS = c(sel_reference_VOC, "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.2.76)", "Omicron (BA.5)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
-levels_VARIANTS = c(sel_reference_VOC,"B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)", "level3 (BA.4.6, BF.7, etc.)","level4 (BA.2.75.2, BQ.1, etc.)","level5+ (BQ.1.1, XBB, etc.)")
+levels_VARIANTS = c(sel_reference_VOC,"B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)", "level4 (BA.4.6, BF.7, etc.)","level5 (BA.2.75.2, BQ.1, etc.)","level6+ (BQ.1.1, XBB, etc.)")
 #levels_VARIANTS_plot = c("Other", "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.5)", "Omicron (BA.5.2)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.76)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
-levels_VARIANTS_plot = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)",sel_reference_VOC, "level3 (BA.4.6, BF.7, etc.)","level4 (BA.2.75.2, BQ.1, etc.)","level5+ (BQ.1.1, XBB, etc.)")
+levels_VARIANTS_plot = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)",sel_reference_VOC, "level4 (BA.4.6, BF.7, etc.)","level5 (BA.2.75.2, BQ.1, etc.)","level6+ (BQ.1.1, XBB, etc.)")
 n = length(levels_VARIANTS)
 lineage_cols_plot = case_when(
   levels_VARIANTS_plot=="Other" ~ "grey65",
@@ -378,9 +378,9 @@ lineage_cols_plot = case_when(
   levels_VARIANTS_plot=="Omicron (BA.4)" ~ "orange",
   levels_VARIANTS_plot=="Omicron (BA.5)" ~ "blue2",
   levels_VARIANTS_plot=="Omicron (BA.5.2*)" ~ "blue4",
-  levels_VARIANTS_plot=="level3 (BA.4.6, BF.7, etc.)" ~ "gold",
-  levels_VARIANTS_plot=="level4 (BA.2.75.2, BQ.1, etc.)" ~ "darkmagenta",
-  levels_VARIANTS_plot=="level5+ (BQ.1.1, XBB, etc.)" ~ "magenta1"
+  levels_VARIANTS_plot=="level4 (BA.4.6, BF.7, etc.)" ~ "gold",
+  levels_VARIANTS_plot=="level5 (BA.2.75.2, BQ.1, etc.)" ~ "darkmagenta",
+  levels_VARIANTS_plot=="level6+ (BQ.1.1, XBB, etc.)" ~ "magenta1"
 )
 pal.bands(lineage_cols_plot)
 # pal.volcano(lineage_cols_plot)
@@ -442,8 +442,8 @@ maxsubmdate = today
 
 # selected countries to include, here those with min 5 BA.2.75.2 or 5 BQ.1* or 5 BA.2.3.20 sequences
 tab = as.data.frame(table(GISAID_sel$country, GISAID_sel$variant))
-sel_countries = sort(unique(c(tab[tab$Var2=="level3 (BA.4.6, BF.7, etc.)"&tab$Freq>=5,"Var1"],
-                              tab[tab$Var2=="level4 (BA.2.75.2, BQ.1, etc.)"&tab$Freq>=5,"Var1"])))
+sel_countries = sort(unique(c(tab[tab$Var2=="level4 (BA.4.6, BF.7, etc.)"&tab$Freq>=5,"Var1"],
+                              tab[tab$Var2=="level5 (BA.2.75.2, BQ.1, etc.)"&tab$Freq>=5,"Var1"])))
 sel_countries
 # [1] Australia      Austria        Bangladesh     Belgium        Canada         Denmark       
 # [7] France         Germany        India          Ireland        Israel         Italy         
