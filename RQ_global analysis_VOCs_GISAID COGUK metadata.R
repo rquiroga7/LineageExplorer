@@ -363,7 +363,7 @@ nrow(GISAID) # 13164288
 #sel_reference_VOC = "Omicron (BA.5.2)"
 sel_reference_VOC = "Omicron (BA.5.2*)"
 #levels_VARIANTS = c(sel_reference_VOC, "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.2.76)", "Omicron (BA.5)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
-levels_VARIANTS = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)",sel_reference_VOC, "level3 (BA.4.6, BF.7, etc.)","level4 (BA.2.75.2, BQ.1, etc.)","level5+ (BQ.1.1, XBB, etc.)")
+levels_VARIANTS = c(sel_reference_VOC,"B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)", "level3 (BA.4.6, BF.7, etc.)","level4 (BA.2.75.2, BQ.1, etc.)","level5+ (BQ.1.1, XBB, etc.)")
 #levels_VARIANTS_plot = c("Other", "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.5)", "Omicron (BA.5.2)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.76)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
 levels_VARIANTS_plot = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)",sel_reference_VOC, "level3 (BA.4.6, BF.7, etc.)","level4 (BA.2.75.2, BQ.1, etc.)","level5+ (BQ.1.1, XBB, etc.)")
 n = length(levels_VARIANTS)
@@ -628,13 +628,13 @@ qplot(data=meffects_sel1,
                           paste0(sel_countries[19:length(sel_countries)], collapse=", "), ")") ) +
   labs(tag = tag) +
   theme(plot.tag.position = "bottomright",
-        plot.tag = element_text(vjust = 1, hjust = 1, size=8)) # +
+        plot.tag = element_text(vjust = 1, hjust = 1, size=8),axis.text.x = element_text(angle = 45,hjust=1)) # +
 # theme(axis.text.x = element_text(angle = 45, hjust=1))
 
 ggsave(file=file.path("plots", plotdir,"growth rate advantage VOCs_global fit.png"), width=7, height=5)
 
 # plot of growth rate advantage of last X newest variants by continent
-lastn = 4
+lastn = 5
 sel_variants = tail(levels_VARIANTS,lastn)
 sel_continents = unique(data_agbyweekcountry1$continent)
 meffects_sel2 = meffects_bycontinent[meffects_bycontinent$continent %in% sel_continents,]
