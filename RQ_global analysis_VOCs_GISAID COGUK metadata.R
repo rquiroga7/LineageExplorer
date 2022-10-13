@@ -984,7 +984,8 @@ ggsave(file=file.path("plots", plotdir, "global multinom fit_all data_prediction
 
 # MAP VARIANT SHARE ONTO CASE NUMBERS ####
 
-sel_countries = c("Austria","Bangladesh","Belgium","Denmark","France","Germany","Israel","Singapore","United Kingdom")
+#sel_countries = c("Austria","Bangladesh","Belgium","Denmark","France","Germany","Israel","Singapore","United Kingdom")
+sel_countries = "United Kingdom"
 country_data = get_national_data(countries=sel_countries, # sel_countries_top3,
                                  source="who",
                                  level=1)
@@ -1007,7 +1008,7 @@ qplot(data=country_data, x=date, y=cases_new, group=country, geom="blank", colou
 # ggsave(file=file.path("plots", plotdir, "new cases countries with more than 10 sequenced BA_2_75 cases.png"), width=7, height=5)
 
 
-fit_preds[(fit_preds$date==today)&(fit_preds$variant=="Omicron (BQ.1)"),]
+fit_preds[(fit_preds$date==today)&(fit_preds$variant=="level4 (BA.4.6, BF.7, etc.)"),]
 
 fit_preds$totnewcases = 
   country_data$cases_new[match(interaction(fit_preds$country,
@@ -1031,26 +1032,31 @@ fit_preds2$cases[fit_preds2$cases<=1] = NA
 fit_preds2$country = factor(fit_preds2$country)
 fit_preds2$variant = factor(fit_preds2$variant, levels=levels_VARIANTS_plot)
 
-ggplot(data=fit_preds2, 
+min_date=as.Date("2022-04-05")
+max_date=as.Date("2022-10-05")
+sel_variants = tail(levels_VARIANTS_plot,7)
+sel_cols_plot = tail(as.vector(lineage_cols_plot),7)
+ggplot(data=fit_preds2[fit_preds2$date >=min_date &  fit_preds2$date <=max_date &fit_preds2$variant %in% sel_variants,], 
        aes(x=date, y=cases)) + 
-  facet_wrap(~ country, scale="free") +
-  geom_line(aes(lwd=I(1), colour=variant, group=variant)) +
-  geom_line(data=fit_preds2, aes(x=date, y=totnewcases_smoothed, lwd=I(1.5)), 
+  #facet_wrap(~ country, scale="free") +
+  geom_line(size=2,aes(lwd=I(1), colour=variant, group=variant)) +
+  geom_line(size=2,data=fit_preds2[fit_preds2$date >=min_date &  fit_preds2$date <=max_date & fit_preds2$variant !="Other",], aes(x=date, y=totnewcases_smoothed, lwd=I(1.5)), 
             colour=alpha("black",0.3)) +
   # geom_line(aes(lwd=I(1), colour=LINEAGE2, group=LINEAGE2)) +
   xaxis +
   # guides(color = guide_legend(reverse=F, nrow=1, byrow=T), fill = guide_legend(reverse=F, nrow=1, byrow=T)) +
-  theme_hc() + theme(legend.position="right", 
+  theme_hc(base_size=22) + theme(legend.position="right", 
                      axis.title.x=element_blank()) + 
   ylab("New confirmed cases per day") +
   ggtitle("NEW CONFIRMED SARS-CoV2 CASES PER DAY BY VARIANT",
           subtitle=paste0("case data accessed via the covidregionaldata package\nlineage frequencies based on GISAID data up to ",today, " plus COG-UK data\nand multinomial spline fit variant ~ ns(date, df=2)+ns(date, df=2):continent+country,\nall countries with >=5 BQ.1*, BA.2.3.20 or BA.2.75.2 sequences shown")) +
-  scale_colour_manual("lineage", values=lineage_cols_plot) +
+  scale_colour_manual("variant", values=sel_cols_plot) +
+  scale_fill_manual("variant", values=sel_cols_plot) +
   scale_y_log10() +
-  coord_cartesian(ylim=c(1,NA), xlim=c(as.Date("2021-01-01"),NA)) +
+  coord_cartesian(ylim=c(1,NA), xlim=c(min_date,max_date)) +
   theme(plot.title=element_text(size=25)) +
-  theme(plot.subtitle=element_text(size=20)) 
-# coord_cartesian(xlim=c(as.Date("2021-01-01"),max(fit_india_multi_predsbystate2$collection_date)-20))
+  theme(plot.subtitle=element_text(size=20)) +
+ coord_cartesian(xlim=c(min_date,max_date))
 
 ggsave(file=file.path("plots", plotdir,"global multinom fit_all data_predictions_confirmed cases multinomial fit by country.png"), width=20, height=12)
 
