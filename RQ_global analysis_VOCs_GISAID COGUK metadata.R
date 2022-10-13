@@ -360,12 +360,13 @@ table(GISAID_sel$variant)
 nrow(GISAID) # 13164288
 
 # define variant lineages and colours ####
-#sel_reference_VOC = "Omicron (BA.5.2)"
-sel_reference_VOC = "Omicron (BA.5.2*)"
+###ORDER IMPORTANT to calculate growth rates and plot latest variants###
+levels_VARIANTS_plot = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)","Omicron (BA.5.2*)", "level4 (BA.4.6, BF.7, etc.)","level5 (BA.2.75.2, BQ.1, etc.)","level6+ (BQ.1.1, XBB, etc.)")
+sel_reference_VOC = levels_VARIANTS_plot[10] # "Omicron (BA.5.2*)"
 #levels_VARIANTS = c(sel_reference_VOC, "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.2.76)", "Omicron (BA.5)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
-levels_VARIANTS = c(sel_reference_VOC,"B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)", "level4 (BA.4.6, BF.7, etc.)","level5 (BA.2.75.2, BQ.1, etc.)","level6+ (BQ.1.1, XBB, etc.)")
+levels_VARIANTS = c(sel_reference_VOC,levels_VARIANTS_plot[-10])
 #levels_VARIANTS_plot = c("Other", "B.1.177 (EU1)", "B.1.160 (EU2)", "B.1.221 (20A/S:98F)", "Beta", "Alpha", "Delta", "Omicron (BA.1)", "Omicron (BA.2)", "Omicron (BA.2.38)", "Omicron (BA.2.12.1)", "Omicron (BA.4)", "Omicron (BA.4.6)", "Omicron (BA.5)", "Omicron (BA.5.2)", "Omicron (BA.5.2.1)", "Omicron (BQ.1)", "Omicron (BA.2.76)", "Omicron (BA.2.75)", "Omicron (BA.2.75.2)","Omicron (BA.2.3.20)","test")
-levels_VARIANTS_plot = c("B.1.177 (EU1)","Beta", "Alpha", "Other", "Delta", "Omicron (BA.1)", "Omicron (BA.2)","Omicron (BA.4)", "Omicron (BA.5)",sel_reference_VOC, "level4 (BA.4.6, BF.7, etc.)","level5 (BA.2.75.2, BQ.1, etc.)","level6+ (BQ.1.1, XBB, etc.)")
+
 n = length(levels_VARIANTS)
 lineage_cols_plot = case_when(
   levels_VARIANTS_plot=="Other" ~ "grey65",
@@ -374,7 +375,7 @@ lineage_cols_plot = case_when(
   levels_VARIANTS_plot=="Beta" ~ "yellow4",
   levels_VARIANTS_plot=="Delta" ~ "mediumorchid",
   levels_VARIANTS_plot=="Omicron (BA.1)" ~ "red",
-  levels_VARIANTS_plot=="Omicron (BA.2)" ~ "darkred",
+  levels_VARIANTS_plot=="Omicron (BA.2)" ~ "green",
   levels_VARIANTS_plot=="Omicron (BA.4)" ~ "orange",
   levels_VARIANTS_plot=="Omicron (BA.5)" ~ "blue2",
   levels_VARIANTS_plot=="Omicron (BA.5.2*)" ~ "blue4",
@@ -832,23 +833,26 @@ plot_preds_logit_be
 ggsave(file=file.path("plots", plotdir, paste0("global_multinom_fit_belgium_logit_scale_",today,".png")), width=12, height=5)
 
 
-# plot just for UK
-plot_preds_logit_uk = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$country=="United Kingdom",], 
+# plot just for UK last 6 months
+sel_variants = tail(levels_VARIANTS_plot,5)
+sel_cols_plot = tail(as.vector(lineage_cols_plot),5)
+plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$variant %in% sel_variants & fit_preds$country=="United Kingdom",], 
+#plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$country=="United Kingdom",], 
                             x=date, y=predicted, geom="blank") +
   # facet_wrap(~ country) +
   geom_ribbon(aes(y=predicted, ymin=conf.low, ymax=conf.high, colour=NULL,
                   fill=variant), alpha=I(0.3)) +
   geom_line(aes(colour=variant), alpha=I(1)) +
   ylab("Share among newly diagnosed infections (%)") +
-  theme_hc() + xlab("") +
+  theme_hc(base_size=8) + xlab("") +
   ggtitle("SARS-CoV2 LINEAGE FREQUENCIES IN UNITED KINGDOM",
           subtitle=paste0("GISAID data up to ",today, " plus COG-UK data, multinomial spline fit variant\n~ ns(date, df=2)+ns(date, df=2):continent+country, only UK shown here")) +
   xaxis +  
   scale_y_continuous( trans="logit", breaks=c(10^seq(-5,0),0.5,0.9,0.99,0.999),
                       labels = c("0.001","0.01","0.1","1","10","100","50","90","99","99.9")) +
-  scale_fill_manual("variant", values=tail(as.vector(lineage_cols_plot),-1)) +
-  scale_colour_manual("variant", values=tail(as.vector(lineage_cols_plot),-1)) +
-  geom_point(data=data_agbyweekcountry1[data_agbyweekcountry1$variant!="Other"&data_agbyweekcountry1$country=="United Kingdom",],
+  scale_fill_manual("variant", values=sel_cols_plot) +
+  scale_colour_manual("variant", values=sel_cols_plot) +
+  geom_point(data=data_agbyweekcountry1[data_agbyweekcountry1$variant!="Other" & data_agbyweekcountry1$variant %in% sel_variants &data_agbyweekcountry1$country=="United Kingdom",],
              aes(x=collection_date, y=prop, size=total,
                  colour=variant
              ),
@@ -865,13 +869,12 @@ plot_preds_logit_uk = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$
   labs(caption = tag) 
 # theme(plot.title=element_text(size=25)) +
 # theme(plot.subtitle=element_text(size=20))
-plot_preds_logit_uk
+plot_preds_logit_uk6m
 
 ggsave(file=file.path("plots", plotdir, paste0("global_multinom_fit_UK_logit_scale_last6months_",today,".png")), width=12, height=5)
 
-# plot just for UK Last 6 months
-sel_variants = tail(levels_VARIANTS_plot,-11)
-plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$country=="United Kingdom",], 
+# plot just for UK
+plot_preds_logit_uk = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_preds$country=="United Kingdom",], 
                               x=date, y=predicted, geom="blank") +
   
   # facet_wrap(~ country) +
@@ -904,7 +907,7 @@ plot_preds_logit_uk6m = qplot(data=fit_preds[fit_preds$variant!="Other"&fit_pred
   labs(caption = tag) 
 # theme(plot.title=element_text(size=25)) +
 # theme(plot.subtitle=element_text(size=20))
-plot_preds_logit_uk6m
+plot_preds_logit_uk
 
 ggsave(file=file.path("plots", plotdir, paste0("global_multinom_fit_UK_logit_scale_",today,".png")), width=12, height=5)
 
